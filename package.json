@@ -1,0 +1,30 @@
+{
+  "name": "rag-pipeline",
+  "version": "1.0.0",
+  "description": "Retrieval Augmented Generation system for academic documents — contextual chunking, semantic vector search, and cross-document concept linking",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/umber-c/rag-pipeline.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/umber-c/rag-pipeline/issues"
+  },
+  "homepage": "https://github.com/umber-c/rag-pipeline#readme",
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}
