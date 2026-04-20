@@ -3,6 +3,8 @@ import { chunkText } from './ingestion/chunker'
 import { embedChunk } from './ingestion/embedder'
 import { addToStore, search } from './retrieval/vector-search'
 import { embedChunks } from './ingestion/embedder'
+import { askClaude } from './generation/claude-client'
+
 
 async function main() {
   try {
@@ -35,7 +37,7 @@ for (let i = 0; i < chunks.length; i++) {
 console.log('Store populated with', chunks.length, 'chunks')
 
 console.log('\nSearching...')
-const query = 'what is the simplex method'
+const query = 'How does the simplex method work and why does it work?'
 const queryEmbedding = await embedChunk(query)
 const results = search(queryEmbedding)
 
@@ -44,6 +46,11 @@ results.forEach((chunk, i) => {
   console.log(`\nResult ${i + 1}:`)
   console.log(chunk.content.substring(0, 200))
 })
+
+console.log('\nAsking Claude...')
+const answer = await askClaude(query, results)
+console.log('\nClaude says:')
+console.log(answer)
 
   } catch (error) {
     console.error('Error:', error)
