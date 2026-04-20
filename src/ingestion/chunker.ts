@@ -19,21 +19,26 @@ function splitIntoSegments(text: string): string[] {
   return [text]
 }
 
-function splitByWords(text: string, chunkSize: number): string[] {
+function splitByWords(text: string, chunkSize: number, overlap: number = 20): string[] {
   const words = text.split(' ')
   const chunks: string[] = []
-  let current = ''
+  let currentWords: string[] = []
 
   for (const word of words) {
-    if ((current + ' ' + word).length > chunkSize && current.length > 0) {
+    currentWords.push(word)
+    const current = currentWords.join(' ')
+
+    if (current.length > chunkSize) {
       chunks.push(current.trim())
-      current = word
-    } else {
-      current += (current ? ' ' : '') + word
+      // Keep last 20 words for overlap into next chunk
+      currentWords = currentWords.slice(-overlap)
     }
   }
 
-  if (current.trim().length > 0) chunks.push(current.trim())
+  if (currentWords.length > 0) {
+    chunks.push(currentWords.join(' ').trim())
+  }
+
   return chunks
 }
 
@@ -41,11 +46,11 @@ export function chunkText(
   text: string,
   documentId: string,
   documentType: Chunk['metadata']['documentType'],
-  chunkSize: number = 500
+  chunkSize: number = 1000
 ): Chunk[] {
   const chunks: Chunk[] = []
   const segments = splitIntoSegments(text)
-  
+
   let charIndex = 0
   let chunkIndex = 0
 
