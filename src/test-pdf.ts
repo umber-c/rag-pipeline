@@ -4,6 +4,7 @@ import { embedChunk } from './ingestion/embedder'
 import { addToStore, search } from './retrieval/vector-search'
 import { embedChunks } from './ingestion/embedder'
 import { askClaude } from './generation/claude-client'
+import { contextualizeChunks } from './ingestion/contextualizer'
 
 
 async function main() {
@@ -27,11 +28,15 @@ async function main() {
     console.log('First 5 values:', embedding.slice(0, 5))
 }
 
-console.log('\nEmbedding all chunks and storing...')
-const allEmbeddings = await embedChunks(chunks.map(c => c.content))
+console.log('\nContextualizing chunks...')
+const enrichedChunks = await contextualizeChunks(chunks, 'Elementary Linear Programming')
+console.log('Contextualization done')
 
-for (let i = 0; i < chunks.length; i++) {
-  addToStore(chunks[i]!, allEmbeddings[i]!)
+console.log('\nEmbedding all chunks and storing...')
+const allEmbeddings = await embedChunks(enrichedChunks.map(c => c.contextualizedContent))
+
+for (let i = 0; i < enrichedChunks.length; i++) {
+  addToStore(enrichedChunks[i]!.chunk, allEmbeddings[i]!)
 }
 
 console.log('Store populated with', chunks.length, 'chunks')
